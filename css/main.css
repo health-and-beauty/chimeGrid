@@ -1,0 +1,14 @@
+body {
+	color: #aaa;
+	background: #333;
+}
+
+canvas,
+video {
+	margin: 0;
+	padding: 0;
+}
+
+#mainCanvas {
+	background: #444;
+}
