@@ -28,8 +28,14 @@ navigator.getUserMedia  = navigator.getUserMedia ||
 // Audio
 ///////////////////////////////////////////////////////////////////////////////
 var actx = new AudioContext();
-var freqs = [110, 220, 440, 880, 1760];
+var freqs = [220, 440, 880, 1760];
 var pulses = [];
+var sampleCoords = [
+	[20, 220],
+	[220, 220],
+	[420, 220],
+	[620, 220]
+];
 
 ///////////////////////////////////////////////////////////////////////////////
 // Video
@@ -103,23 +109,28 @@ var renderPulse = function (note) {
 };
 
 
-var sampleGrid = function (x, y) {
+var sampleCoord = function (i) {
+    var x = sampleCoords[i][0];
+    var y = sampleCoords[i][1];
 	var brightness = getCoordBrightness(vctx, x, y);
 	var note = getNoteFromBrightness(brightness);
-	var o = new Oscillator(actx, freqs[note], 'triangle');
-	o.pulse(0, 100);
-	renderPulse(note);
+
+    if (pulses[i] === undefined || pulses[i] !== note) {
+        var o = new Oscillator(actx, freqs[note], 'sine');
+        o.pulse(0, 100);
+        pulses[i] = note;
+    }
+    renderPulse(note);
 	vctx.drawImage(crosshair(50, 50), x-25, y-25);
 };
 
 
-var mediaCanPlay = function () {
+var togglePlayback = function () {
 	if (!elem.media.paused) {
-		return;
+		elem.media.pause()
+	} else {
+		elem.media.play();
 	}
-	elem.canvas.width = elem.media.videoWidth;
-	elem.canvas.height = elem.media.videoHeight;
-	elem.media.play();
 };
 
 
@@ -138,14 +149,19 @@ var update = function () {
 	}
 	vctx.clearRect(0, 0, elem.canvas.width, elem.canvas.height);
 	drawVideo();
-	sampleGrid(20, 220);
-	sampleGrid(220, 220);
-	sampleGrid(420, 220);
-	sampleGrid(620, 220);
+	sampleCoords.forEach(function(element, i){sampleCoord(i);});
 };
 
-elem.media.oncanplay = mediaCanPlay;
-var refresher = new Refresher(update, 10);
+var init = function () {
+	if (!elem.media.paused) {
+		return;
+	}
+	elem.canvas.width = elem.media.videoWidth;
+	elem.canvas.height = elem.media.videoHeight;
+};
+
+elem.media.oncanplay = init;
+var refresher = new Refresher(update, 0);
 refresher.start();
 
 
@@ -186,6 +202,7 @@ if (navigator.getUserMedia) {
   elem.media.src = 'somevideo.webm'; // fallback.
 }
 
-elem.playBtn.addEventListener('click', function(){if (!elem.media.paused) {elem.media.pause()} else {elem.media.play();}});
+elem.playBtn.addEventListener('click', togglePlayback);
 window.elem = elem;
+
 })();
