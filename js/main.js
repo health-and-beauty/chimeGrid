@@ -1,10 +1,9 @@
-// Utils
-//        (b-a)(x - min)
-// f(x) = --------------  + a
-//           max - min
+(function(){ 'use strict';
 
-var remapRange = function (val, oMin, oMax, nMin, nMax) {
-	return ((nMax-nMin) * (val - oMin)) / (oMax - oMin);
+
+// Utils
+var remapRange = function (val, origRange, newRange) {
+	return ((newRange[1]-newRange[0]) * (val - origRange[0])) / (origRange[1] - origRange[0]);
 };
 
 // Audio
@@ -14,90 +13,111 @@ window.AudioContext = (function(){
 })();
 
 var actx = new AudioContext();
+var freqs = [110, 220, 440, 880, 1760];
 var notes = [];
-notes.push(new Oscillator(actx, 55, 'sine'));
-notes.push(new Oscillator(actx, 110, 'sine'));
-notes.push(new Oscillator(actx, 220, 'sine'));
-notes.push(new Oscillator(actx, 440, 'sine'));
-notes.push(new Oscillator(actx, 880, 'sine'));
-notes.push(new Oscillator(actx, 1760, 'sine'));
+for (var i = 0; i < freqs.length; i++) {
+	notes.push(new Oscillator(actx, freqs[i], 'sine'));
+}
 
 
 // Video
-var dom = {
+var elem = {
 	canvas : document.getElementById('mainCanvas'),
 	media : document.getElementById('mainVideo')
 };
-var vctx = dom.canvas.getContext('2d');
+var vctx = elem.canvas.getContext('2d');
 
-var getGridColor = function (context, x, y) {
+var getCoordBrightness = function (context, x, y) {
 	var imgData = context.getImageData(x, y ,1, 1);
-	//console.log(imgData.data);
-	var val = (imgData.data[0] + imgData.data[1] + imgData.data[2]) / 3;
-	var note = Math.round(remapRange(val, 0, 255, 0, (notes.length - 1)));
+	return (imgData.data[0] + imgData.data[1] + imgData.data[2]) / 3;
+};
 
-	notes[note].pulse(0, 10);
+var getNoteFromBrightness = function (brightness) {
+	var rangeColor = [0, 255];
+	var rangeNotes = [0, (freqs.length - 1)];
+	var note = Math.round(remapRange(brightness, rangeColor, rangeNotes));
+	return note;
+};
 
-	if (note === 0) {
-		vctx.rect(20,20,50,50);
-		vctx.fill();
+// var renderPulse = function (note) {
+// 	if (typeof(note) === 'number' && note >= 0) {
+// 		var xoffset = note * 100;
+// 		vctx.save();
+// 		vctx.rect(xoffset, 20, 50, 50);
+// 		vctx.fill();
+// 		vctx.restore();
+// 	}
+// };
+
+var square = function (w, h) {
+	var canvas = document.createElement('canvas');
+	var ctx = canvas.getContext('2d');
+	canvas.width = w;
+	canvas.height = h;
+	ctx.rect(0, 0, w, h);
+	ctx.fill();
+	return canvas;
+};
+
+var renderPulse = function (note) {
+	if (typeof(note) === 'number' && note >= 0) {
+		var xoffset = note * 100;
+		vctx.drawImage(square(50,50), xoffset, 20);
 	}
-	if (note === 1) {
-		vctx.rect(120,20,50,50);
-		vctx.fill();
-	}
-	if (note === 2) {
-		vctx.rect(220,20,50,50);
-		vctx.fill();
-	}
-	if (note === 3) {
-		vctx.rect(320,20,50,50);
-		vctx.fill();
-	}
-	if (note === 4) {
-		vctx.rect(420,20,50,50);
-		vctx.fill();
-	}
-	if (note === 5) {
-		vctx.rect(520,20,50,50);
-		vctx.fill();
-	}
+};
+
+
+var sampleGrid = function (x, y) {
+	var brightness = getCoordBrightness(vctx, x, y);
+	var note = getNoteFromBrightness(brightness);
+	var o = new Oscillator(actx, freqs[note], 'triangle');
+	o.pulse(0, 500);
+	//notes[note].pulse(0, 10);
+	renderPulse(note);
 };
 
 var mediaCanPlay = function () {
-	dom.canvas.width = dom.media.videoWidth;
-	dom.canvas.height = dom.media.videoHeight;
-	vctx.translate(dom.canvas.width, 0);
-	vctx.scale(-1, 1);
-	vctx.drawImage(dom.media, 0, 0);
-};
-
-var mediaTimeupdate = function () {
-	if (dom.media.paused) {
+	if (!elem.media.paused) {
 		return;
 	}
-	vctx.clearRect(0, 0, dom.canvas.width, dom.canvas.height);
-	vctx.drawImage(dom.media, 0, 0);
-	getGridColor(vctx, 20, 20);
-	getGridColor(vctx, 220, 220);
-	getGridColor(vctx, 420, 420);
-	getGridColor(vctx, 620, 620);
+	elem.canvas.width = elem.media.videoWidth;
+	elem.canvas.height = elem.media.videoHeight;
+	elem.media.play();
 };
 
-dom.media.oncanplay = mediaCanPlay;
 
-var refreshA = new Refresher(mediaTimeupdate, 100);
-refreshA.start();
-
-
-
-
-
-
+var drawVideo = function () {
+	vctx.save();
+	vctx.translate(elem.canvas.width, 0);
+	vctx.scale(-1, 1);
+	vctx.drawImage(elem.media, 0, 0);
+	vctx.restore();
+};
 
 
-var errorCallback = function () {alert('sorry bub');};
+var update = function () {
+	if (elem.media.paused) {
+		return;
+	}
+	vctx.clearRect(0, 0, elem.canvas.width, elem.canvas.height);
+	drawVideo();
+	sampleGrid(20, 220);
+	sampleGrid(220, 220);
+	sampleGrid(420, 220);
+	sampleGrid(620, 220);
+};
 
+elem.media.oncanplay = mediaCanPlay;
+var refresher = new Refresher(update, 1000);
+refresher.start();
+
+
+
+
+
+
+
+// Webcam
 navigator.getUserMedia  = navigator.getUserMedia ||
                           navigator.webkitGetUserMedia ||
                           navigator.mozGetUserMedia ||
@@ -123,10 +143,16 @@ var vgaConstraints = {
   audio : false
 };
 
+var errorCallback = function () {alert('sorry bub');};
+
 if (navigator.getUserMedia) {
   navigator.getUserMedia(vgaConstraints, function(stream) {
-    dom.media.src = window.URL.createObjectURL(stream);
+    elem.media.src = window.URL.createObjectURL(stream);
   }, errorCallback);
 } else {
-  dom.media.src = 'somevideo.webm'; // fallback.
+  elem.media.src = 'somevideo.webm'; // fallback.
 }
+
+
+
+})();

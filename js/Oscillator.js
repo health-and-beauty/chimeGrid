@@ -32,6 +32,6 @@ Oscillator.prototype.pulse = function(start, length) {
     var self = this;
     setTimeout(function(){
         self.play();
-        setTimeout(function(){self.stop();}, length || 100);
+        setTimeout(function(){self.stop();self.osc.disconnect;self.osc=undefined;}, length || 100);
     }, start || 0);
 };
