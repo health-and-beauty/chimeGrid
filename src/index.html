@@ -5,10 +5,15 @@
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 <body>
-	<h1>ChimeGrid</h1>
-	<canvas id='mainCanvas' width="600" height="600"></canvas>
-
-	<br /><button id='playToggle'>play/pause</button>
+	<h1>ChimeGrid <button id='playToggle'>play/pause</button></h1>
+	<canvas id='mainCanvas' width="1" height="1"></canvas>
+	<div>
+		<div><input id='inputChimeA' type='number' min=50 max=1000 step=1 value=0 /> chime a</div>
+		<div><input id='inputChimeB' type='number' min=50 max=1000 step=1 value=0 /> chime b</div>
+		<div><input id='inputChimeC' type='number' min=50 max=1000 step=1 value=0 /> chime c</div>
+		<div><input id='inputChimeD' type='number' min=50 max=1000 step=1 value=0 /> chime d</div>
+		<div><input id='inputPulseLength' type='number' min=1 max=2000 step=10 value=100 /> Pulse Length</div>
+	</div>
 
     <script src="js/Oscillator.js"></script>
     <script src="js/getFrequency.js"></script>

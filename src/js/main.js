@@ -28,8 +28,9 @@ navigator.getUserMedia  = navigator.getUserMedia ||
 // Audio
 ///////////////////////////////////////////////////////////////////////////////
 var actx = new AudioContext();
-var freqs = [220, 440, 880, 1760];
+var freqs = [220, 440, 880, 1760]; //[177, 179, 188, 190]  [301, 308, 327, 580]
 var pulses = [];
+var pulseLength = 1000;
 var sampleCoords = [
 	[220, 100],
 	[220, 300],
@@ -44,7 +45,12 @@ var sampleCoords = [
 var elem = {
 	canvas : document.getElementById('mainCanvas'),
 	media : document.createElement('video'),
-	playBtn : document.getElementById('playToggle')
+	playBtn : document.getElementById('playToggle'),
+	inputChimeA : document.getElementById('inputChimeA'),
+	inputChimeB : document.getElementById('inputChimeB'),
+	inputChimeC : document.getElementById('inputChimeC'),
+	inputChimeD : document.getElementById('inputChimeD'),
+	inputPulseLength : document.getElementById('inputPulseLength')
 };
 var vctx = elem.canvas.getContext('2d');
 
@@ -136,8 +142,8 @@ var sampleCoord = function (i) {
 	var note = getNoteFromBrightness(brightness);
 
     if (pulses[i] === undefined || pulses[i] !== note) {
-        var o = new Oscillator(actx, freqs[note], 'triangle');
-        o.pulse(0, 100);
+        var o = new Oscillator(actx, freqs[note], 'sine');
+        o.pulse(0, pulseLength);
         pulses[i] = note;
     }
     renderPulse(note);
@@ -186,8 +192,30 @@ refresher.start();
 
 
 
+var updateChime = function (pos, value) {
+	if (pos < 0 || pos >= freqs.length) return;
+	freqs[pos] = value;
+};
+var updatePulseLength = function (value) {
+	pulseLength = value;
+};
 
 
+var updateChimeAListener = function (e) {
+	updateChime(0, this.value);
+};
+var updateChimeBListener = function (e) {
+	updateChime(1, this.value);
+};
+var updateChimeCListener = function (e) {
+	updateChime(2, this.value);
+};
+var updateChimeDListener = function (e) {
+	updateChime(3, this.value);
+};
+var updatePulseLengthListener = function (e) {
+	updatePulseLength(this.value);
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 // Webcam
@@ -223,6 +251,11 @@ if (navigator.getUserMedia) {
 }
 
 elem.playBtn.addEventListener('click', togglePlayback);
+elem.inputChimeA.addEventListener('change', updateChimeAListener);
+elem.inputChimeB.addEventListener('change', updateChimeBListener);
+elem.inputChimeC.addEventListener('change', updateChimeCListener);
+elem.inputChimeD.addEventListener('change', updateChimeDListener);
+elem.inputPulseLength.addEventListener('change', updatePulseLengthListener);
 window.elem = elem;
 
 })();
