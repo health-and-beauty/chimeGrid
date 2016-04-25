@@ -31,11 +31,12 @@ var actx = new AudioContext();
 var freqs = [220, 440, 880, 1760];
 var pulses = [];
 var sampleCoords = [
-	[20, 220],
-	[220, 220],
-	[420, 220],
-	[620, 220]
+	[220, 100],
+	[220, 300],
+	[420, 300],
+	[420, 100]
 ];
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Video
@@ -46,6 +47,25 @@ var elem = {
 	playBtn : document.getElementById('playToggle')
 };
 var vctx = elem.canvas.getContext('2d');
+
+var generateCircleCoords = function (points) {
+	var r = 120;
+	var pts = points || 8;
+	var i = 0;
+	var x;
+	var y;
+	var xoffset = elem.canvas.width/2;
+	var yoffset = elem.canvas.height/2;
+	sampleCoords = [];
+	for (i=0; i<pts; i++) {
+		var a = 2 * Math.PI * i/pts;
+		var x = r * Math.cos(a);
+		var y = r * Math.sin(a);
+		sampleCoords.push([x + xoffset, y + yoffset]);
+	}
+}
+
+
 
 var getCoordBrightness = function (context, x, y) {
 	var imgData = context.getImageData(x, y ,1, 1);
@@ -116,7 +136,7 @@ var sampleCoord = function (i) {
 	var note = getNoteFromBrightness(brightness);
 
     if (pulses[i] === undefined || pulses[i] !== note) {
-        var o = new Oscillator(actx, freqs[note], 'sine');
+        var o = new Oscillator(actx, freqs[note], 'triangle');
         o.pulse(0, 100);
         pulses[i] = note;
     }
