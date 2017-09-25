@@ -52,12 +52,12 @@ var pulseLength = 100;
 
 // A minor scale
 var triggers = [
-    {point: [100, 100], freq: getFrequency('A3'), brightness: undefined, active: false},
-    {point: [150, 100], freq: getFrequency('C4'), brightness: undefined, active: false},
-    {point: [200, 100], freq: getFrequency('E4'), brightness: undefined, active: false},
-    {point: [250, 100], freq: getFrequency('A4'), brightness: undefined, active: false},
-    {point: [300, 100], freq: getFrequency('C5'), brightness: undefined, active: false},
-    {point: [350, 100], freq: getFrequency('E5'), brightness: undefined, active: false},
+    {point: [100, 100], freq: getFrequency('A3'), brightness: undefined, active: 0},
+    {point: [150, 100], freq: getFrequency('C4'), brightness: undefined, active: 0},
+    {point: [200, 100], freq: getFrequency('E4'), brightness: undefined, active: 0},
+    {point: [250, 100], freq: getFrequency('A4'), brightness: undefined, active: 0},
+    {point: [300, 100], freq: getFrequency('C5'), brightness: undefined, active: 0},
+    {point: [350, 100], freq: getFrequency('E5'), brightness: undefined, active: 0},
 ];
 
 
@@ -80,19 +80,20 @@ var sampleCoord = function (trigger) {
     var ty = trigger.point[1];
     var tb = trigger.brightness;
     var tfreq = trigger.freq;
-	var b = getCoordBrightness(vctx, tx, ty);
+	  var b = getCoordBrightness(vctx, tx, ty);
     var threshhold = 20;
     var bdiff = Math.abs(tb - b);
 
-    if (tb !== undefined && bdiff > threshhold && trigger.active === false) {
+    if (tb !== undefined && bdiff > threshhold) {
         var o = new Oscillator(actx, tfreq, 'sine');
-        trigger.active = true;
-        o.pulse(0, pulseLength, false, function(){trigger.active = false});
+        trigger.active++;
+        o.pulse(0, pulseLength, false, function(){trigger.active--});
     }
     trigger.brightness = b;
+    var size = 10 * (trigger.active + 1);
 
     var color = (trigger.active) ? 'white' : 'red';
-	vctx.drawImage(crosshair(40, 40, color), tx-20, ty-20);
+	  vctx.drawImage(crosshair(size, size, color), tx-(size/2), ty-(size/2));
 };
 
 
