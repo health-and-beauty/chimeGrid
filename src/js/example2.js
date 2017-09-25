@@ -40,14 +40,24 @@ var pulseLength = 100;
 //     {point: [420, 200], freq: 1760, brightness: undefined, active: false},
 // ];
 
+// var triggers = [
+//     {point: [100, 100], freq: getFrequency('A3'), brightness: undefined, active: false},
+//     {point: [150, 100], freq: getFrequency('B3'), brightness: undefined, active: false},
+//     {point: [200, 100], freq: getFrequency('C4'), brightness: undefined, active: false},
+//     {point: [250, 100], freq: getFrequency('D4'), brightness: undefined, active: false},
+//     {point: [300, 100], freq: getFrequency('E4'), brightness: undefined, active: false},
+//     {point: [350, 100], freq: getFrequency('F4'), brightness: undefined, active: false},
+//     {point: [400, 100], freq: getFrequency('G4'), brightness: undefined, active: false},
+// ];
+
+// A minor scale
 var triggers = [
     {point: [100, 100], freq: getFrequency('A3'), brightness: undefined, active: false},
-    {point: [150, 100], freq: getFrequency('B3'), brightness: undefined, active: false},
-    {point: [200, 100], freq: getFrequency('C4'), brightness: undefined, active: false},
-    {point: [250, 100], freq: getFrequency('D4'), brightness: undefined, active: false},
-    {point: [300, 100], freq: getFrequency('E4'), brightness: undefined, active: false},
-    {point: [350, 100], freq: getFrequency('F4'), brightness: undefined, active: false},
-    {point: [400, 100], freq: getFrequency('G4'), brightness: undefined, active: false},
+    {point: [150, 100], freq: getFrequency('C4'), brightness: undefined, active: false},
+    {point: [200, 100], freq: getFrequency('E4'), brightness: undefined, active: false},
+    {point: [250, 100], freq: getFrequency('A4'), brightness: undefined, active: false},
+    {point: [300, 100], freq: getFrequency('C5'), brightness: undefined, active: false},
+    {point: [350, 100], freq: getFrequency('E5'), brightness: undefined, active: false},
 ];
 
 
