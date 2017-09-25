@@ -17,11 +17,12 @@ window.AudioContext = (function(){
           window.webkitAudioContext;
 })();
 
-navigator.getUserMedia  = navigator.getUserMedia ||
-                          navigator.webkitGetUserMedia ||
-                          navigator.mozGetUserMedia ||
-                          navigator.msGetUserMedia;
-
+navigator.getUserMedia = (function(){
+  return  navigator.getUserMedia ||
+          navigator.webkitGetUserMedia ||
+          navigator.mozGetUserMedia ||
+          navigator.msGetUserMedia;
+})();
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -61,6 +62,8 @@ var getNoteFromBrightness = function (brightness) {
 	var note = Math.round(remapRange(brightness, rangeColor, rangeNotes));
 	return note;
 };
+
+
 var getBrightnessFromNote = function (note) {
 	var rangeColor = [0, 255];
 	var rangeNotes = [0, (freqs.length - 1)];
@@ -120,6 +123,7 @@ var update = function () {
 	drawVideo();
 	sampleCoords.forEach(function(element, i){sampleCoord(i);});
 };
+
 
 var init = function () {
 	if (!elem.media.paused) {
@@ -183,6 +187,7 @@ var vgaConstraints = {
   audio : false
 };
 
+
 var errorCallback = function () {alert('sorry bub');};
 
 if (navigator.getUserMedia) {
@@ -192,6 +197,8 @@ if (navigator.getUserMedia) {
 } else {
   elem.media.src = 'somevideo.webm'; // fallback.
 }
+
+// elem.media.src = 'images/SampleVideo_1280x720_10mb.mp4';
 
 elem.playBtn.addEventListener('click', togglePlayback);
 elem.inputChimeA.addEventListener('change', updateChimeAListener);
