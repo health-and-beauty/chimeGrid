@@ -55,9 +55,10 @@ Oscillator.prototype.stop = function () {
 Oscillator.prototype.pulse = function(start, length, startCallback, endCallback) {
     var self = this;
     setTimeout(function(){
-        startCallback();
+        if (typeof startCallback === 'function') startCallback();
         self.play();
-        setTimeout(function(){endCallback();self.stop();self.volume.disconnect();self.osc=undefined;}, length || 100);
+        setTimeout(function(){if (typeof endCallback === 'function') endCallback();
+;self.stop();self.volume.disconnect();self.osc=undefined;}, length || 100);
     }, start || 0);
 };
 
