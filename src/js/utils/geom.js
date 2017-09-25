@@ -1,5 +1,3 @@
-(function(){
-
 var generateCircleCoords = function (radius, cx, cy, points) {
     var r = radius || 100;
     var pts = points || 8;
@@ -17,7 +15,3 @@ var generateCircleCoords = function (radius, cx, cy, points) {
     }
     return coords;
 };
-
-window.generateCircleCoords = generateCircleCoords;
-
-})();
