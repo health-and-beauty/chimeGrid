@@ -54,24 +54,6 @@ var elem = {
 };
 var vctx = elem.canvas.getContext('2d');
 
-var generateCircleCoords = function (points) {
-	var r = 120;
-	var pts = points || 8;
-	var i = 0;
-	var x;
-	var y;
-	var xoffset = elem.canvas.width/2;
-	var yoffset = elem.canvas.height/2;
-	sampleCoords = [];
-	for (i=0; i<pts; i++) {
-		var a = 2 * Math.PI * i/pts;
-		var x = r * Math.cos(a);
-		var y = r * Math.sin(a);
-		sampleCoords.push([x + xoffset, y + yoffset]);
-	}
-}
-
-
 
 var getCoordBrightness = function (context, x, y) {
 	var imgData = context.getImageData(x, y ,1, 1);
