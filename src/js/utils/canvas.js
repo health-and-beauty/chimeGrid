@@ -21,7 +21,7 @@ var crosshair = function (w, h, color, thickness) {
     canvas.width = w;
     canvas.height = h;
     color = color || 'red';
-    thickness = thickness || 28;
+    thickness = thickness || 1;
 
     ctx.save();
     ctx.fillStyle = color;

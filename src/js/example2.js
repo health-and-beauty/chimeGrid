@@ -123,9 +123,9 @@ var sampleCoord = function (trigger) {
     }
     trigger.brightness = b;
     var size = 10 * (trigger.active + 1);
-
-    var color = (trigger.active) ? 'rgba(255,255,255,'+(1/trigger.active)+')' : 'rgba(255, 50, 50, 0.9)';
-	  vctx.drawImage(crosshair(size, size, color), tx-(size/2), ty-(size/2));
+    var thickness = 430 / (trigger.active + 1) || 1;
+    var color = (trigger.active) ? 'rgba(255,255,255,'+(1/trigger.active)+')' : 'rgba(100, 100, 100, 0.9)';
+	  vctx.drawImage(crosshair(size, size, color, thickness), tx-(size/2), ty-(size/2));
 };
 
 
