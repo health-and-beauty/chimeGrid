@@ -30,6 +30,8 @@ navigator.getUserMedia = (function(){
 ///////////////////////////////////////////////////////////////////////////////
 var actx = new AudioContext();
 var pulseLength = 100;
+var refreshRate = 0;
+var THRESHHOLD = 20;
 
 // [220, 440, 880, 1760]  [177, 179, 188, 190]  [301, 308, 327, 580]
 // var triggers = [
@@ -51,48 +53,78 @@ var pulseLength = 100;
 // ];
 
 // A minor scale
+// var triggers = [
+//     {point: [100, 100], freq: getFrequency('A3'), brightness: undefined, active: 0},
+//     {point: [150, 100], freq: getFrequency('C4'), brightness: undefined, active: 0},
+//     {point: [200, 100], freq: getFrequency('E4'), brightness: undefined, active: 0},
+//     {point: [250, 100], freq: getFrequency('A4'), brightness: undefined, active: 0},
+//     {point: [300, 100], freq: getFrequency('C5'), brightness: undefined, active: 0},
+//     {point: [350, 100], freq: getFrequency('E5'), brightness: undefined, active: 0},
+// ];
+
+var points = generateCircleCoords(200, 300, 300, 12);
+var points2 = generateCircleCoords(100, 300, 300, 12);
 var triggers = [
-    {point: [100, 100], freq: getFrequency('A3'), brightness: undefined, active: 0},
-    {point: [150, 100], freq: getFrequency('C4'), brightness: undefined, active: 0},
-    {point: [200, 100], freq: getFrequency('E4'), brightness: undefined, active: 0},
-    {point: [250, 100], freq: getFrequency('A4'), brightness: undefined, active: 0},
-    {point: [300, 100], freq: getFrequency('C5'), brightness: undefined, active: 0},
-    {point: [350, 100], freq: getFrequency('E5'), brightness: undefined, active: 0},
+    {point: points[0], freq: getFrequency('E1'), brightness: undefined, active: 0},
+    {point: points[1], freq: getFrequency('A2'), brightness: undefined, active: 0},
+    {point: points[2], freq: getFrequency('C2'), brightness: undefined, active: 0},
+    {point: points[3], freq: getFrequency('E2'), brightness: undefined, active: 0},
+    {point: points[4], freq: getFrequency('A2'), brightness: undefined, active: 0},
+    {point: points[5], freq: getFrequency('C3'), brightness: undefined, active: 0},
+    {point: points[6], freq: getFrequency('E3'), brightness: undefined, active: 0},
+    {point: points[7], freq: getFrequency('A3'), brightness: undefined, active: 0},
+    {point: points[8], freq: getFrequency('C4'), brightness: undefined, active: 0},
+    {point: points[9], freq: getFrequency('E4'), brightness: undefined, active: 0},
+    {point: points[10], freq: getFrequency('A4'), brightness: undefined, active: 0},
+    {point: points[11], freq: getFrequency('C5'), brightness: undefined, active: 0},
+
+    // {point: points2[0], freq: getFrequency('F1'), brightness: undefined, active: 0},
+    // {point: points2[1], freq: getFrequency('B2'), brightness: undefined, active: 0},
+    // {point: points2[2], freq: getFrequency('D2'), brightness: undefined, active: 0},
+    // {point: points2[3], freq: getFrequency('F2'), brightness: undefined, active: 0},
+    // {point: points2[4], freq: getFrequency('B2'), brightness: undefined, active: 0},
+    // {point: points2[5], freq: getFrequency('D3'), brightness: undefined, active: 0},
+    // {point: points2[6], freq: getFrequency('F3'), brightness: undefined, active: 0},
+    // {point: points2[7], freq: getFrequency('B3'), brightness: undefined, active: 0},
+    // {point: points2[8], freq: getFrequency('D4'), brightness: undefined, active: 0},
+    // {point: points2[9], freq: getFrequency('F4'), brightness: undefined, active: 0},
+    // {point: points2[10], freq: getFrequency('B4'), brightness: undefined, active: 0},
+    // {point: points2[11], freq: getFrequency('D5'), brightness: undefined, active: 0},  
 ];
 
-
-///////////////////////////////////////////////////////////////////////////////
-// Video
-///////////////////////////////////////////////////////////////////////////////
 var elems = {
 	canvas : document.getElementById('mainCanvas'),
 	media : document.createElement('video'),
 	playBtn : document.getElementById('playToggle'),
 	inputPulseLength : document.getElementById('inputPulseLength'),
-    inputs: []
+  inputRefreshRate : document.getElementById('inputRefreshRate'),
+  inputThreshhold : document.getElementById('inputThreshhold'),
+  inputs: []
 };
 var vctx = elems.canvas.getContext('2d');
 
 
-
+///////////////////////////////////////////////////////////////////////////////
+// Video
+///////////////////////////////////////////////////////////////////////////////
 var sampleCoord = function (trigger) {
     var tx = trigger.point[0];
     var ty = trigger.point[1];
     var tb = trigger.brightness;
     var tfreq = trigger.freq;
 	  var b = getCoordBrightness(vctx, tx, ty);
-    var threshhold = 20;
+    var threshhold = THRESHHOLD;
     var bdiff = Math.abs(tb - b);
 
-    if (tb !== undefined && bdiff > threshhold) {
+    if (tb !== undefined && bdiff > threshhold ) {
         var o = new Oscillator(actx, tfreq, 'sine');
         trigger.active++;
-        o.pulse(0, pulseLength, false, function(){trigger.active--});
+        o.pulse(0, pulseLength*trigger.active, false, function(){trigger.active--});
     }
     trigger.brightness = b;
     var size = 10 * (trigger.active + 1);
 
-    var color = (trigger.active) ? 'white' : 'red';
+    var color = (trigger.active) ? 'rgba(255,255,255,'+(1/trigger.active)+')' : 'rgba(255, 50, 50, 0.9)';
 	  vctx.drawImage(crosshair(size, size, color), tx-(size/2), ty-(size/2));
 };
 
@@ -192,7 +224,7 @@ triggers.forEach(function(trigger){
 });
 
 elems.media.oncanplay = init;
-var refresher = new Refresher(update, 0);
+var refresher = new Refresher(update, refreshRate);
 refresher.start();
 
 
@@ -200,6 +232,12 @@ elems.playBtn.addEventListener('click', togglePlayback);
 elems.inputPulseLength.addEventListener('change', function (e) {
     pulseLength = this.value;
 });
-window.elems = elems;
+elems.inputRefreshRate.addEventListener('change', function (e) {
+    refreshRate = this.value;
+    refresher.setFreq(refreshRate);
+});
+elems.inputThreshhold.addEventListener('change', function (e) {
+    THRESHHOLD = this.value;
+});
 
 })();
