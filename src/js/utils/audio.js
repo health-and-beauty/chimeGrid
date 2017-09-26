@@ -49,7 +49,29 @@ Oscillator.prototype.play = function () {
 };
 
 Oscillator.prototype.stop = function () {
-    this.volume.gain.value = 0;
+    
+    // Fade out. avoids non-zeroed wave clipping
+    var steps = 30;
+    var self = this;
+    var fadeLoop = function () {
+        setInterval(function(){
+            if (!steps) return;
+            var gainVal = 1 - (1/steps);
+            if (steps >= 1) fadeLoop();
+            else {
+                self.volume.disconnect();
+                self.osc=undefined;
+            }
+            self.volume.gain.value = gainVal;
+            steps--;
+        }, 10); 
+    };
+    fadeLoop();
+
+    // Straight cutoff
+    // this.volume.gain.value = 0;
+    // this.volume.disconnect();
+    // this.osc=undefined;
 };
 
 Oscillator.prototype.pulse = function(start, length, startCallback, endCallback) {
@@ -58,7 +80,7 @@ Oscillator.prototype.pulse = function(start, length, startCallback, endCallback)
         if (typeof startCallback === 'function') startCallback();
         self.play();
         setTimeout(function(){if (typeof endCallback === 'function') endCallback();
-;self.stop();self.volume.disconnect();self.osc=undefined;}, length || 100);
+;self.stop();}, length || 100);
     }, start || 0);
 };
 
