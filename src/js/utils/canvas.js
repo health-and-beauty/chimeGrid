@@ -15,24 +15,25 @@ var square = function (w, h, brightness) {
     return canvas;
 };
 
-var crosshair = function (w, h, color) {
+var crosshair = function (w, h, color, thickness) {
     var canvas = document.createElement('canvas');
     var ctx = canvas.getContext('2d');
     canvas.width = w;
     canvas.height = h;
     color = color || 'red';
+    thickness = thickness || 28;
 
     ctx.save();
     ctx.fillStyle = color;
-    ctx.translate(canvas.width/2, 0);
-    ctx.rect(0, 0, 1, w);
+    ctx.translate(canvas.width/2 - (thickness/2), 0);
+    ctx.rect(0, 0, thickness, w);
     ctx.fill();
     ctx.restore();
 
     ctx.save();
     ctx.fillStyle = color;
-    ctx.translate(0, canvas.height/2);
-    ctx.rect(0, 0, h, 1);
+    ctx.translate(0, canvas.height/2 - (thickness/2));
+    ctx.rect(0, 0, h, thickness);
     ctx.fill();
     ctx.restore();
     return canvas;
