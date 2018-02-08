@@ -24,7 +24,7 @@ navigator.getUserMedia = (function(){
 // Audio
 ///////////////////////////////////////////////////////////////////////////////
 var pulseLength = 100;
-var refreshRate = 0;
+var refreshRate = 100;
 var THRESHHOLD = 20;
 
 // [220, 440, 880, 1760]  [177, 179, 188, 190]  [301, 308, 327, 580]
@@ -77,6 +77,7 @@ var elems = {
 	canvas : document.getElementById('mainCanvas'),
 	media : document.createElement('video'),
 	playBtn : document.getElementById('playToggle'),
+    inputSelectMidiOutputs : document.getElementById("inputSelectMidiOutputs"),
 	inputPulseLength : document.getElementById('inputPulseLength'),
   inputRefreshRate : document.getElementById('inputRefreshRate'),
   inputThreshhold : document.getElementById('inputThreshhold'),
@@ -84,17 +85,32 @@ var elems = {
 };
 var vctx = elems.canvas.getContext('2d');
 
-var output;
-WebMidi.enable(function (err) {
-    // Basic I/O Check
-    console.log(WebMidi.inputs);
-    console.log(WebMidi.outputs);
 
-    // Send MIDI Output
-    // var midi_device = "Network MBP - Midi Session";
-    var midi_device = "IAC Driver Bus 1";
-    output = WebMidi.getOutputByName(midi_device);
+var midi_devices_available = [];
+var midi_device_name;
+var midi_output;
+
+// MIDI Init
+WebMidi.enable(function (err) {
+    if (err) {
+        console.error("WebMIDI failed to load.");
+        return;
+    }
+    webmidi_init();
 });
+
+var webmidi_init = function () {
+    WebMidi.outputs.forEach(function(output){
+        midi_devices_available.push(output.name);
+    });
+    update_midi_select(midi_devices_available);
+};
+
+var webmidi_update_output = function (midi_device_name) {
+    // midi_device_name = "IAC Driver Bus 1";
+    console.log("Setting MIDI output to " + "\""+midi_device_name+"\"");
+    midi_output = WebMidi.getOutputByName(midi_device_name);
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 // Video
@@ -108,21 +124,20 @@ var sampleCoord = function (trigger) {
     var threshhold = THRESHHOLD;
     var bdiff = Math.abs(tb - b);
 
-    if (tb !== undefined && bdiff > threshhold ) {
-        output.playNote(tnote, "all", {duration: pulseLength, velocity: 1});
+    if (tb !== undefined && bdiff > threshhold && midi_output) {
         trigger.active++;
-        if (trigger.active > 20) trigger.active = 0;
+        midi_output.playNote(tnote, "all", {duration: pulseLength, velocity: 1/trigger.active});
         setTimeout(
             (function (trigger) {
                 return function () {
                     trigger.active--;
                 };
             })(trigger),
-            pulseLength*trigger.active
+            pulseLength
         );
     }
     trigger.brightness = b;
-    var size = 10 * (trigger.active + 1);
+    var size = 30 * (trigger.active + 1);
     var thickness = 430 / (trigger.active + 1) || 1;
     var opacity = 1/trigger.active;
     var color = (trigger.active) ? 'rgba(255,255,255,'+opacity+')' : 'rgba(255, 255, 255, 0.2)';
@@ -204,8 +219,24 @@ var createInputElem = function (value, min, max, step) {
 
 
 
+/**
+ * Updates select UI for choosing MIDI output device
+ * @param  {[type]} options [description]
+ * @return {[type]}         [description]
+ */
+var update_midi_select = function (options) {
+    var option_elem = document.createElement("option");
+    option_elem.text = 'None';
+    option_elem.selected = true;
+    elems.inputSelectMidiOutputs.add(option_elem);
 
-
+    options.forEach(function(option){
+        var option_elem = document.createElement("option");
+        option_elem.text = option;
+        option_elem.value = option;
+        elems.inputSelectMidiOutputs.add(option_elem);
+    });
+};
 
 
 
@@ -228,6 +259,9 @@ var refresher = new Refresher(update, refreshRate);
 refresher.start();
 
 
+elems.inputSelectMidiOutputs.addEventListener('change', function (e) {
+    webmidi_update_output(event.target.value);
+});
 elems.playBtn.addEventListener('click', togglePlayback);
 elems.inputPulseLength.addEventListener('change', function (e) {
     pulseLength = this.value;
