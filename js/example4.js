@@ -90,15 +90,6 @@ var midi_devices_available = [];
 var midi_device_name;
 var midi_output;
 
-// MIDI Init
-WebMidi.enable(function (err) {
-    if (err) {
-        console.error("WebMIDI failed to load.");
-        return;
-    }
-    webmidi_init();
-});
-
 var webmidi_init = function () {
     WebMidi.outputs.forEach(function(output){
         midi_devices_available.push(output.name);
@@ -240,6 +231,21 @@ var update_midi_select = function (options) {
 
 
 
+
+
+
+
+
+
+// MIDI Init
+WebMidi.enable(function (err) {
+    if (err) {
+        alert("WebMIDI failed to load. :(");
+        console.error("WebMIDI failed to load.");
+        return;
+    }
+    webmidi_init();
+});
 
 
 // Generate Inputs for each note
