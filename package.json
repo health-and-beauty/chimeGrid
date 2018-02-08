@@ -1,0 +1,30 @@
+{
+  "name": "chimegrid",
+  "version": "1.0.0",
+  "description": "various A/V experiments with Canvas, Web Audio API and Web MIDI API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/health-and-beauty/chimeGrid.git"
+  },
+  "keywords": [
+    "video",
+    "trigger",
+    "audio",
+    "midi",
+    "html5",
+    "canvas"
+  ],
+  "author": "Eriks Vitolins",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/health-and-beauty/chimeGrid/issues"
+  },
+  "homepage": "https://github.com/health-and-beauty/chimeGrid#readme",
+  "dependencies": {
+    "webmidi": "^2.0.0"
+  }
+}
