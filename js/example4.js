@@ -196,7 +196,7 @@ if (navigator.getUserMedia) {
 }
 
 
-var createInputElem = function (value, min, max, step) {
+var createInputNumberElem = function (value, min, max, step) {
     var elem = document.createElement('input');
     elem.type = 'number';
     elem.value = value || 50;
@@ -206,8 +206,12 @@ var createInputElem = function (value, min, max, step) {
     return elem;
 };
 
-
-
+var createInputTextElem = function (value) {
+    var elem = document.createElement('input');
+    elem.type = 'text';
+    elem.value = value || '';
+    return elem;
+};
 
 
 /**
@@ -252,11 +256,11 @@ WebMidi.enable(function (err) {
 var inputsContainer = document.getElementById('chimeInputs');
 triggers.forEach(function(trigger){
     var note = trigger.note;
-    var elem = createInputElem(note);
+    var elem = createInputTextElem(note);
     inputsContainer.appendChild(elem);
-    // elem.addEventListener('change', function(){
-    //     trigger.note = this.value;
-    // });
+    elem.addEventListener('change', function(){
+        trigger.note = this.value;
+    });
     elems.inputs.push(elem);
 });
 
