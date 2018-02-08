@@ -77,6 +77,7 @@ var elems = {
 	canvas : document.getElementById('mainCanvas'),
 	media : document.createElement('video'),
 	playBtn : document.getElementById('playToggle'),
+    inputSelectMediaInputs : document.getElementById("inputSelectMediaInputs"),
     inputSelectMidiOutputs : document.getElementById("inputSelectMidiOutputs"),
 	inputPulseLength : document.getElementById('inputPulseLength'),
   inputRefreshRate : document.getElementById('inputRefreshRate'),
@@ -187,13 +188,16 @@ var webcamConstraints = {
 
 var errorCallback = function () {alert('sorry bub');};
 
-if (navigator.getUserMedia) {
-  navigator.getUserMedia(webcamConstraints, function(stream) {
-    elems.media.src = window.URL.createObjectURL(stream);
-  }, errorCallback);
-} else {
-  elems.media.src = 'somevideo.webm'; // video fallback.
-}
+
+var init_media_input =  function (video_url) {
+    if (navigator.getUserMedia && !video_url) {
+      navigator.getUserMedia(webcamConstraints, function(stream) {
+        elems.media.src = window.URL.createObjectURL(stream);
+      }, errorCallback);
+    } else {
+      elems.media.src = video_url;
+    }
+} 
 
 
 var createInputNumberElem = function (value, min, max, step) {
@@ -234,13 +238,6 @@ var update_midi_select = function (options) {
 };
 
 
-
-
-
-
-
-
-
 // MIDI Init
 WebMidi.enable(function (err) {
     if (err) {
@@ -272,6 +269,15 @@ refresher.start();
 elems.inputSelectMidiOutputs.addEventListener('change', function (e) {
     webmidi_update_output(event.target.value);
 });
+
+elems.inputSelectMediaInputs.addEventListener('change', function (e) {
+    if (event.target.value == "webcam") {
+        init_media_input();
+    } else if (event.target.value == "video") {
+        init_media_input('images/Insecure_Season_2_Official_Trailer__2017__HBO.mp4');
+    }
+});
+
 elems.playBtn.addEventListener('click', togglePlayback);
 elems.inputPulseLength.addEventListener('change', function (e) {
     pulseLength = this.value;

@@ -36,6 +36,11 @@
 	<canvas id='mainCanvas' width="1" height="1"></canvas>
 	<div id="settings">
 		<h3>Global Settings</h3>
+		<p>Media Input: <select id="inputSelectMediaInputs">
+			<option value="none">None</option>
+			<option value="webcam">Webcam</option>
+			<option value="video">Video Example</option>
+		</select></p>
 		<p>MIDI Output: <select id="inputSelectMidiOutputs"></select></p>
 		<p><input id='inputPulseLength' type='number' min=1 max=2000 step=10 value=100 /> Pulse Length (ms)</p>
 		<p><input id='inputRefreshRate' type='number' min=0 max=1000 step=1 value=100 /> Refresh Rate (ms)</p>
