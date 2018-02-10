@@ -24,31 +24,42 @@
 			top: 0;
 			bottom: 0;
 			width: 300px;
-			background: #444;
+			background: #444444ee;
 			box-sizing: border-box;
 			padding: 20px;
 			font-size: 0.7em;
 		}
+
+		#playToggle {
+			width: 100%;
+		    line-height: 2em;
+		    border: 0 none;
+		    border-radius: 3px;
+		    background: #666;
+		    color: #fff;
+		}
 	</style>
 </head>
 <body>
-	<h1>ChimeGrid - MIDI <button id='playToggle'>play/pause</button></h1>
 	<canvas id='mainCanvas' width="1" height="1"></canvas>
 	<div id="settings">
-		<h3>Global Settings</h3>
+		<h1>ChimeGrid - MIDI</h1>
+		<h3>Media Settings</h3>
 		<p>Media Input: <select id="inputSelectMediaInputs">
 			<option value="none">None</option>
 			<option value="webcam">Webcam</option>
 			<option value="video">Video Example</option>
 		</select></p>
 		<p>MIDI Output: <select id="inputSelectMidiOutputs"></select></p>
-		<p><input id='inputPulseLength' type='number' min=1 max=2000 step=10 value=100 /> Pulse Length (ms)</p>
-		<p><input id='inputRefreshRate' type='number' min=0 max=1000 step=1 value=100 /> Refresh Rate (ms)</p>
-		<p><input id='inputThreshhold' type='number' min=0 max=255 step=1 value=20 /> Threshhold (brightness detection 0-255)</p>
+		<button id='playToggle'>play/pause</button>
 
 		<hr>
 
 		<h3>Triggers</h3>
+		<p><input id='inputPulseLength' type='number' min=1 max=2000 step=10 value=100 /> Pulse Length (ms)</p>
+		<p><input id='inputRefreshRate' type='number' min=0 max=1000 step=1 value=100 /> Refresh Rate (ms)</p>
+		<p><input id='inputThreshhold' type='number' min=0 max=255 step=1 value=20 /> Threshhold (brightness detection 0-255)</p>
+
 		<div id="chimeInputs"></div>
 	</div>
     <script src="node_modules/webmidi/webmidi.min.js" type="text/javascript"></script>
