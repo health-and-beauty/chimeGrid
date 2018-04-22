@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>ChimeGrid - MIDI</title>
+	<title>MIDEO - Video Trigger for MIDI</title>
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
 	<link href="https://fonts.googleapis.com/css?family=Poppins|Raleway" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
@@ -57,6 +57,7 @@
 			position: relative;
 			top: -8px;
 			left: -10px;
+			transition: 0.3s all ease-in-out;
 		}
 
 
@@ -83,7 +84,7 @@
 		#toggle_container {
 			position: absolute;
 			top: 10px;
-			width: 90px;
+			width: 100px;
 			right: 10px;
 			text-align: right;
 			transition: 0.3s all ease-in-out;
@@ -95,17 +96,14 @@
 			right: 310px;
 		}
 
-		#fullscreenToggle{
-			cursor: pointer;
-			margin-right: 1em;
+
+		#settings.collapsed #logo {
+			left: -205px;
 		}
 
 		#settingsToggle {
+			margin-right: 0em;
 			cursor: pointer;
-		}
-
-		#fullscreenToggle:hover, #settingsToggle:hover {
-			color: #fff;
 		}
 
 		#canvasContainer {
@@ -113,6 +111,19 @@
 			justify-content:center;
 			align-items:center;
 			height:100vh;
+		}
+
+		.toggleButton {
+			margin-right: 1em;
+			cursor: pointer;
+		}
+
+		.toggleButton:hover {
+			color: #fff;
+		}
+
+		.toggleButton i {
+			text-shadow: 0 1px 6px rgb(0,0,0,0.4);
 		}
 
 		.btn_large {
@@ -142,8 +153,10 @@
 	</div>
 	<div id="settings" class="gradient">
 		<div id="toggle_container">
-			<span id="fullscreenToggle"><i class="fas fa-expand"></i></span>
-			<span id="settingsToggle"><i class="fas fa-bars"></i></span>
+			<span id="playToggleSmall" class="toggleButton"><i class="fas fa-fw fa-play"></i></span>
+			<span id="audioToggleSmall" class="toggleButton"><i class="fas fa-fw fa-volume-off"></i></span>
+			<span id="fullscreenToggle" class="toggleButton"><i class="fas fa-fw fa-expand"></i></span>
+			<span id="settingsToggle" class="toggleButton"><i class="fas fa-fw fa-bars"></i></span>
 		</div>
 		<!-- <h1>MIDEO</h1> -->
 		<img id="logo" src="/assets/mideo_logo_white.svg">
@@ -155,15 +168,15 @@
 			<option value="videoA">Video Example</option>
 		</select></p>
 		<p>MIDI Output: <select id="inputSelectMidiOutputs"></select></p>
-		<button id='playToggle' class='btn_large'>Play / Pause</button>
-		<br /><br /><button id='audioToggle' class='btn_large'>Mute / Unmute</button>
+<!-- 		<button id='playToggle' class='btn_large'>Play / Pause</button>
+		<br /><br /><button id='audioToggle' class='btn_large'>Mute / Unmute</button> -->
 
 		<hr />
 
 		<h3>Triggers</h3>
 		<p><input id='inputPulseLength' type='number' min=1 max=2000 step=10 value=100 /> Pulse Length (ms)</p>
 		<p><input id='inputRefreshRate' type='number' min=0 max=1000 step=1 value=100 /> Refresh Rate (ms)</p>
-		<p><input id='inputThreshhold' type='number' min=0 max=255 step=1 value=20 /> Threshhold (brightness detection 0-255)</p>
+		<p><input id='inputThreshhold' type='number' min=0 max=255 step=1 value=20 /> Sensitivity (0-255)</p>
 
 		<hr />
 

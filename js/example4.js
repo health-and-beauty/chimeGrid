@@ -73,21 +73,46 @@ var refreshTriggers = function (trigger) {
     vctx.drawImage(crosshair(size, size, color, thickness), tx-(size/2), ty-(size/2));
 };
 
+var update_toggle_buttons = function () {
+    if (IS_PLAYING) {
+        elems.playBtnSmall.classList.add('fa-pause');
+        elems.playBtnSmall.classList.remove('fa-play');
+    } else {
+        elems.playBtnSmall.classList.remove('fa-pause');
+        elems.playBtnSmall.classList.add('fa-play');
+    }
+
+    if (IS_MUTED) {
+        elems.muteBtnSmall.classList.add('fa-volume-off');
+        elems.muteBtnSmall.classList.remove('fa-volume-up');
+    } else {
+        elems.muteBtnSmall.classList.remove('fa-volume-off');
+        elems.muteBtnSmall.classList.add('fa-volume-up');
+    }
+    
+};
+
 
 var togglePlayback = function () {
 	if (!elems.media.paused) {
 		elems.media.pause();
+        IS_PLAYING = false;
 	} else {
 		elems.media.play();
+        IS_PLAYING = true;
 	}
+    update_toggle_buttons();
 };
 
 var toggleMute = function () {
     if (!elems.media.muted) {
         elems.media.muted = true;
+        IS_MUTED = true;
     } else {
         elems.media.muted = false;
+        IS_MUTED = false;
     }
+    update_toggle_buttons();
 };
 
 var toggleSettings = function () {
@@ -206,8 +231,8 @@ var update_midi_select = function (options) {
 
 
 
-
-
+var IS_PLAYING = false;
+var IS_MUTED = true;
 
 var PULSELENGTH = 100;
 var REFRESHRATE = 100;
@@ -249,6 +274,8 @@ var elems = {
     media : document.createElement('video'),
     playBtn : document.getElementById('playToggle'),
     muteBtn : document.getElementById('audioToggle'),
+    playBtnSmall : document.querySelector('#playToggleSmall i'),
+    muteBtnSmall : document.querySelector('#audioToggleSmall i'),
     settingsBtn : document.getElementById('settingsToggle'),
     fullscreenBtn : document.getElementById('fullscreenToggle'),
     settingsPanel : document.getElementById('settings'),
@@ -315,8 +342,10 @@ elems.inputSelectMediaInputs.addEventListener('change', function (e) {
 
 
 // Event Listeners
-elems.playBtn.addEventListener('click', togglePlayback);
-elems.muteBtn.addEventListener('click', toggleMute);
+// elems.playBtn.addEventListener('click', togglePlayback);
+// elems.muteBtn.addEventListener('click', toggleMute);
+elems.playBtnSmall.addEventListener('click', togglePlayback);
+elems.muteBtnSmall.addEventListener('click', toggleMute);
 elems.settingsBtn.addEventListener('click', toggleSettings);
 elems.fullscreenBtn.addEventListener('click', function () { toggleFullscreen(document.body); } );
 
