@@ -1,22 +1,64 @@
+<!-- https://docs.google.com/spreadsheets/d/1lLb5ckC82gGhdeQU3QDuPWNOLRwZwzghVOj4kHVVa9Q/edit?ts=5a7c7139#gid=0 -->
 <!DOCTYPE html>
 <html>
 <head>
 	<title>ChimeGrid - MIDI</title>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Poppins|Raleway" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 	<style type="text/css">
-		input {
-			border: 1px solid #aaa;
-			outline: none;
-			border-radius: 4px;
-			padding: 3px 3px;
-			width: 40px;
+		html, body {
+			font-family: 'Raleway', sans-serif;
+			/*font-family: 'Poppins', sans-serif;*/
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			overflow: hidden;
 		}
-
+		input {
+		    border: 1px none #3c3c3c;
+		    outline: none;
+		    width: 40px;
+		    background: #1b1b1b;
+		    color: #ccc;
+		    border-radius: 2px;
+		    padding: 3px 5px;
+		    margin: 2px;
+		}
+		select {
+		    background: #1b1b1b;
+		    color: #aaa;
+		    padding: 5px !important;
+		    border: 0px none;
+		    height: 2.2em;
+		    outline: none;
+		    width: 190px;
+		}
+		h1 {
+			color: #fff;
+			font-size: 3em;
+			letter-spacing: 0.04em;
+			margin-top: 10px;
+		}
+		h3 {
+		    text-transform: uppercase;
+		}
 		hr {
 			border: none;
 			border-top: 1px dotted #222;
 			margin: 2em 0;
 		}
+	
+		#logo {
+			height: 1em;
+			padding: 0;
+			position: relative;
+			top: -8px;
+			left: -10px;
+		}
+
 
 		#settings {
 			position: absolute;
@@ -24,41 +66,106 @@
 			top: 0;
 			bottom: 0;
 			width: 300px;
-			background: #444444ee;
 			box-sizing: border-box;
 			padding: 20px;
 			font-size: 0.7em;
+			transition: 0.3s all ease-in-out;
 		}
 
-		#playToggle {
+		#settings.collapsed {
+			 right: -300px;
+		}
+
+		#mainCanvas {
+			/*filter: grayscale(0.8);*/
+		}
+
+		#toggle_container {
+			position: absolute;
+			top: 10px;
+			width: 90px;
+			right: 10px;
+			text-align: right;
+			transition: 0.3s all ease-in-out;
+			cursor: pointer;
+			font-size: 1em;
+		}
+
+		#settings.collapsed #toggle_container {
+			right: 310px;
+		}
+
+		#fullscreenToggle{
+			cursor: pointer;
+			margin-right: 1em;
+		}
+
+		#settingsToggle {
+			cursor: pointer;
+		}
+
+		#fullscreenToggle:hover, #settingsToggle:hover {
+			color: #fff;
+		}
+
+		#canvasContainer {
+			display: flex;
+			justify-content:center;
+			align-items:center;
+			height:100vh;
+		}
+
+		.btn_large {
 			width: 100%;
-		    line-height: 2em;
-		    border: 0 none;
-		    border-radius: 3px;
-		    background: #666;
-		    color: #fff;
+			line-height: 2em;
+			border-radius: 22px;
+			background: #404040;
+			color: #aaa;
+			border: 0px none;
+			padding: 3px;
+			cursor: pointer;
+		}
+
+		.gradient {
+			/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#3a3a3a+0,252525+100 */
+			background: rgba(58,58,580,0.9); /* Old browsers */
+			background: -moz-linear-gradient(-45deg, rgba(58,58,58,0.9) 0%, rgba(37,37,37,0.8) 100%); /* FF3.6-15 */
+			background: -webkit-linear-gradient(-45deg, rgba(58,58,58,0.9) 0%,rgba(37,37,37,0.8) 100%); /* Chrome10-25,Safari5.1-6 */
+			background: linear-gradient(135deg, rgba(58,58,58,0.9) 0%,rgba(37,37,37,0.8) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3a3a3a', endColorstr='#252525',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 		}
 	</style>
 </head>
 <body>
-	<canvas id='mainCanvas' width="1" height="1"></canvas>
-	<div id="settings">
-		<h1>ChimeGrid - MIDI</h1>
-		<h3>Media Settings</h3>
+	<div id='canvasContainer'>
+		<canvas id='mainCanvas' width="1" height="1"></canvas>
+	</div>
+	<div id="settings" class="gradient">
+		<div id="toggle_container">
+			<span id="fullscreenToggle"><i class="fas fa-expand"></i></span>
+			<span id="settingsToggle"><i class="fas fa-bars"></i></span>
+		</div>
+		<!-- <h1>MIDEO</h1> -->
+		<img id="logo" src="/assets/mideo_logo_white.svg">
+		<hr />
+		<h3>I/O</h3>
 		<p>Media Input: <select id="inputSelectMediaInputs">
 			<option value="none">None</option>
 			<option value="webcam">Webcam</option>
-			<option value="video">Video Example</option>
+			<option value="videoA">Video Example</option>
 		</select></p>
 		<p>MIDI Output: <select id="inputSelectMidiOutputs"></select></p>
-		<button id='playToggle'>play/pause</button>
+		<button id='playToggle' class='btn_large'>Play / Pause</button>
+		<br /><br /><button id='audioToggle' class='btn_large'>Mute / Unmute</button>
 
-		<hr>
+		<hr />
 
 		<h3>Triggers</h3>
 		<p><input id='inputPulseLength' type='number' min=1 max=2000 step=10 value=100 /> Pulse Length (ms)</p>
 		<p><input id='inputRefreshRate' type='number' min=0 max=1000 step=1 value=100 /> Refresh Rate (ms)</p>
 		<p><input id='inputThreshhold' type='number' min=0 max=255 step=1 value=20 /> Threshhold (brightness detection 0-255)</p>
+
+		<hr />
 
 		<div id="chimeInputs"></div>
 	</div>

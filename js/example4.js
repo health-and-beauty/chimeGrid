@@ -76,12 +76,41 @@ var refreshTriggers = function (trigger) {
 
 var togglePlayback = function () {
 	if (!elems.media.paused) {
-		elems.media.pause()
+		elems.media.pause();
 	} else {
 		elems.media.play();
 	}
 };
 
+var toggleMute = function () {
+    if (!elems.media.muted) {
+        elems.media.muted = true;
+    } else {
+        elems.media.muted = false;
+    }
+};
+
+var toggleSettings = function () {
+    if (!elems.settingsPanel.classList.contains('collapsed')) {
+        elems.settingsPanel.classList.add('collapsed');
+    } else {
+        elems.settingsPanel.classList.remove('collapsed');
+    }
+};
+
+var toggleFullscreen = function (element) {
+    // Supports most browsers and their versions.
+    var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+
+    if (requestMethod) { // Native full screen.
+        requestMethod.call(element);
+    } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+        var wscript = new ActiveXObject("WScript.Shell");
+        if (wscript !== null) {
+            wscript.SendKeys("{F11}");
+        }
+    }
+};
 
 var drawVideo = function () {
 	vctx.save();
@@ -132,6 +161,7 @@ var init_media_input =  function (video_url) {
       }, errorCallback);
     } else {
       elems.media.src = video_url;
+      elems.media.muted = true;
     }
 } 
 
@@ -218,6 +248,10 @@ var elems = {
     canvas : document.getElementById('mainCanvas'),
     media : document.createElement('video'),
     playBtn : document.getElementById('playToggle'),
+    muteBtn : document.getElementById('audioToggle'),
+    settingsBtn : document.getElementById('settingsToggle'),
+    fullscreenBtn : document.getElementById('fullscreenToggle'),
+    settingsPanel : document.getElementById('settings'),
     inputSelectMediaInputs : document.getElementById("inputSelectMediaInputs"),
     inputSelectMidiOutputs : document.getElementById("inputSelectMidiOutputs"),
     inputPulseLength : document.getElementById('inputPulseLength'),
@@ -273,13 +307,19 @@ elems.inputSelectMediaInputs.addEventListener('change', function (e) {
     if (event.target.value == "webcam") {
         FLIP_HORIZONTAL = true;
         init_media_input();
-    } else if (event.target.value == "video") {
+    } else if (event.target.value == "videoA") {
         FLIP_HORIZONTAL = false;
         init_media_input('images/Insecure_Season_2_Official_Trailer__2017__HBO.mp4');
     }
 });
 
+
+// Event Listeners
 elems.playBtn.addEventListener('click', togglePlayback);
+elems.muteBtn.addEventListener('click', toggleMute);
+elems.settingsBtn.addEventListener('click', toggleSettings);
+elems.fullscreenBtn.addEventListener('click', function () { toggleFullscreen(document.body); } );
+
 elems.inputPulseLength.addEventListener('change', function (e) {
     PULSELENGTH = this.value;
 });

@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/health-and-beauty/chimeGrid#readme",
   "dependencies": {
+    "font-awesome": "^4.7.0",
     "webmidi": "^2.0.0"
   }
 }
