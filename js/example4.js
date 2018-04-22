@@ -66,12 +66,14 @@ var refreshTriggers = function (trigger) {
         );
     }
     trigger.brightness = b;
-    var size = 10 * (trigger.active + 1);
-    // var thickness = 430 / (trigger.active + 1) || 1;
-    var thickness = 10;
-    var opacity = 1/trigger.active;
-    var color = (trigger.active) ? 'rgba(255,255,255,'+opacity+')' : 'rgba(255, 255, 255, 0.2)';
-    vctx.drawImage(crosshair(size, size, color, thickness), tx-(size/2), ty-(size/2));
+    if (DISPLAY_TRIGGERS) {
+        var size = 10 * (trigger.active + 1);
+        // var thickness = 430 / (trigger.active + 1) || 1;
+        var thickness = 10;
+        var opacity = 1/trigger.active;
+        var color = (trigger.active) ? 'rgba(255,255,255,'+opacity+')' : 'rgba(255, 255, 255, 0.2)';
+        vctx.drawImage(crosshair(size, size, color, thickness), tx-(size/2), ty-(size/2));
+    }
 };
 
 var update_toggle_buttons = function () {
@@ -235,6 +237,7 @@ var update_midi_select = function (options) {
 var IS_PLAYING = false;
 var IS_MUTED = true;
 
+var DISPLAY_TRIGGERS = true;
 var PULSELENGTH = 100;
 var REFRESHRATE = 100;
 var THRESHHOLD = 20;
