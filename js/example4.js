@@ -45,6 +45,7 @@ var refreshTriggers = function (trigger) {
     var tx = trigger.point[0];
     var ty = trigger.point[1];
     var tb = trigger.brightness;
+    var tc = trigger.channel || "all";
     var tnote = trigger.note;
 	var b = getCoordBrightness(vctx, tx, ty);
     var threshhold = THRESHHOLD;
@@ -53,7 +54,7 @@ var refreshTriggers = function (trigger) {
 
     if (tb !== undefined && bdiff > threshhold && midi_output) {
         trigger.active++;
-        midi_output.playNote(tnote, "all", {duration: PULSELENGTH, velocity: max_velocity/trigger.active});
+        midi_output.playNote(tnote, tc, {duration: PULSELENGTH, velocity: max_velocity/trigger.active});
         
         setTimeout(
             (function (trigger) {
@@ -242,31 +243,31 @@ var FLIP_HORIZONTAL = false;
 var points = generateCircleCoords(200, 300, 300, 12);
 var points2 = generateCircleCoords(100, 300, 300, 12);
 var triggers = [
-    {point: points[0], note: 'E1', brightness: undefined, active: 0},
-    {point: points[1], note: 'A2', brightness: undefined, active: 0},
-    {point: points[2], note: 'C2', brightness: undefined, active: 0},
-    {point: points[3], note: 'E2', brightness: undefined, active: 0},
-    {point: points[4], note: 'A2', brightness: undefined, active: 0},
-    {point: points[5], note: 'C3', brightness: undefined, active: 0},
-    {point: points[6], note: 'E3', brightness: undefined, active: 0},
-    {point: points[7], note: 'A3', brightness: undefined, active: 0},
-    {point: points[8], note: 'C4', brightness: undefined, active: 0},
-    {point: points[9], note: 'E4', brightness: undefined, active: 0},
-    {point: points[10], note: 'A4', brightness: undefined, active: 0},
-    {point: points[11], note: 'C5', brightness: undefined, active: 0},
+    {point: points[0], note: 'E1', brightness: undefined, active: 0, channel: 1},
+    {point: points[1], note: 'A2', brightness: undefined, active: 0, channel: 1},
+    {point: points[2], note: 'C2', brightness: undefined, active: 0, channel: 1},
+    {point: points[3], note: 'E2', brightness: undefined, active: 0, channel: 1},
+    {point: points[4], note: 'A2', brightness: undefined, active: 0, channel: 1},
+    {point: points[5], note: 'C3', brightness: undefined, active: 0, channel: 1},
+    {point: points[6], note: 'E3', brightness: undefined, active: 0, channel: 1},
+    {point: points[7], note: 'A3', brightness: undefined, active: 0, channel: 1},
+    {point: points[8], note: 'C4', brightness: undefined, active: 0, channel: 1},
+    {point: points[9], note: 'E4', brightness: undefined, active: 0, channel: 1},
+    {point: points[10], note: 'A4', brightness: undefined, active: 0, channel: 1},
+    {point: points[11], note: 'C5', brightness: undefined, active: 0, channel: 1},
 
-    {point: points2[0], note: 'E1', brightness: undefined, active: 0},
-    {point: points2[1], note: 'A2', brightness: undefined, active: 0},
-    {point: points2[2], note: 'C2', brightness: undefined, active: 0},
-    {point: points2[3], note: 'E2', brightness: undefined, active: 0},
-    {point: points2[4], note: 'A2', brightness: undefined, active: 0},
-    {point: points2[5], note: 'C3', brightness: undefined, active: 0},
-    {point: points2[6], note: 'E3', brightness: undefined, active: 0},
-    {point: points2[7], note: 'A3', brightness: undefined, active: 0},
-    {point: points2[8], note: 'C4', brightness: undefined, active: 0},
-    {point: points2[9], note: 'E4', brightness: undefined, active: 0},
-    {point: points2[10], note: 'A4', brightness: undefined, active: 0},
-    {point: points2[11], note: 'C5', brightness: undefined, active: 0},    
+    {point: points2[0], note: 'E1', brightness: undefined, active: 0, channel: 2},
+    {point: points2[1], note: 'A2', brightness: undefined, active: 0, channel: 2},
+    {point: points2[2], note: 'C2', brightness: undefined, active: 0, channel: 2},
+    {point: points2[3], note: 'E2', brightness: undefined, active: 0, channel: 2},
+    {point: points2[4], note: 'A2', brightness: undefined, active: 0, channel: 2},
+    {point: points2[5], note: 'C3', brightness: undefined, active: 0, channel: 2},
+    {point: points2[6], note: 'E3', brightness: undefined, active: 0, channel: 2},
+    {point: points2[7], note: 'A3', brightness: undefined, active: 0, channel: 2},
+    {point: points2[8], note: 'C4', brightness: undefined, active: 0, channel: 2},
+    {point: points2[9], note: 'E4', brightness: undefined, active: 0, channel: 2},
+    {point: points2[10], note: 'A4', brightness: undefined, active: 0, channel: 2},
+    {point: points2[11], note: 'C5', brightness: undefined, active: 0, channel: 2},    
 ];
 
 var elems = {
