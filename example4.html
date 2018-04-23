@@ -113,6 +113,12 @@
 			height:100vh;
 		}
 
+		#playbackButtonsContainer {
+			display: flex;
+			justify-content: center;
+			margin-top: 2em;
+		}
+	
 		.toggleButton {
 			margin-right: 1em;
 			cursor: pointer;
@@ -135,6 +141,31 @@
 			border: 0px none;
 			padding: 3px;
 			cursor: pointer;
+		}
+
+		.btn_small {
+		    width: 3em;
+		    max-width: 3em;
+		    line-height: 2em;
+		    border-radius: 0.3em;
+		    background: #404040;
+		    color: #aaa;
+		    border: 0px none;
+		    padding: 3px;
+		    cursor: pointer;
+		    box-sizing: border-box;
+		    margin: 0 3px;
+		}
+
+		.btn_small:hover,
+		.btn_large:hover {
+			color: #fff;
+		}
+		
+		/*.btn_small.pressed,*/
+		.btn_large.pressed {
+			background: #111;
+			color: #ccc;
 		}
 
 		.gradient {
@@ -168,15 +199,19 @@
 			<option value="videoA">Video Example</option>
 		</select></p>
 		<p>MIDI Output: <select id="inputSelectMidiOutputs"></select></p>
-<!-- 		<button id='playToggle' class='btn_large'>Play / Pause</button>
-		<br /><br /><button id='audioToggle' class='btn_large'>Mute / Unmute</button> -->
-
+		<div id="playbackButtonsContainer">
+			<button id='playToggle' class='btn_small'><i class="fas fa-fw fa-play"></i></button>
+			<button id='skipBackward' class='btn_small'><i class="fas fa-fw fa-fast-backward"></i></button>
+			<button id='skipForward' class='btn_small'><i class="fas fa-fw fa-fast-forward"></i></button>
+			<button id='audioToggle' class='btn_small'><i class="fas fa-fw fa-volume-off"></i></button>
+		</div>
 		<hr />
 
 		<h3>Triggers</h3>
 		<p><input id='inputPulseLength' type='number' min=1 max=2000 step=10 value=100 /> Pulse Length (ms)</p>
 		<p><input id='inputRefreshRate' type='number' min=0 max=1000 step=1 value=100 /> Refresh Rate (ms)</p>
 		<p><input id='inputThreshhold' type='number' min=0 max=255 step=1 value=20 /> Sensitivity (0-255)</p>
+		<p><button id='triggerVisToggle' class='btn_large'>Visualize On / Off</button></p>
 
 		<hr />
 

@@ -80,21 +80,51 @@ var update_toggle_buttons = function () {
     if (IS_PLAYING) {
         elems.playBtnSmall.classList.add('fa-pause');
         elems.playBtnSmall.classList.remove('fa-play');
+        elems.playBtnIcon.classList.add('fa-pause');
+        elems.playBtnIcon.classList.remove('fa-play');
+        elems.playBtn.classList.add('pressed');
     } else {
         elems.playBtnSmall.classList.remove('fa-pause');
         elems.playBtnSmall.classList.add('fa-play');
+        elems.playBtnIcon.classList.remove('fa-pause');
+        elems.playBtnIcon.classList.add('fa-play');
+        elems.playBtn.classList.remove('pressed');
     }
 
     if (IS_MUTED) {
         elems.muteBtnSmall.classList.add('fa-volume-off');
         elems.muteBtnSmall.classList.remove('fa-volume-up');
+        elems.muteBtnIcon.classList.add('fa-volume-off');
+        elems.muteBtnIcon.classList.remove('fa-volume-up');
+        elems.muteBtn.classList.add('pressed');
     } else {
         elems.muteBtnSmall.classList.remove('fa-volume-off');
         elems.muteBtnSmall.classList.add('fa-volume-up');
+        elems.muteBtnIcon.classList.remove('fa-volume-off');
+        elems.muteBtnIcon.classList.add('fa-volume-up');
+
+        elems.muteBtn.classList.remove('pressed');
     }
-    
+
+    if (DISPLAY_TRIGGERS) {
+        elems.triggerVisBtn.classList.add('pressed');
+    } else {
+        elems.triggerVisBtn.classList.remove('pressed');
+    }   
 };
 
+var videoSkip = function (offset) {
+    var newTime = Number(offset) + elems.media.currentTime;
+    elems.media.currentTime = newTime;
+};
+
+var skipBackward = function () {
+    videoSkip(-0.5);
+};
+
+var skipForward = function () {
+    videoSkip(0.5);
+};
 
 var togglePlayback = function () {
 	if (!elems.media.paused) {
@@ -138,6 +168,11 @@ var toggleFullscreen = function (element) {
             wscript.SendKeys("{F11}");
         }
     }
+};
+
+var toggleTriggerVis = function (element) {
+    DISPLAY_TRIGGERS = !DISPLAY_TRIGGERS;
+    update_toggle_buttons();
 };
 
 var drawVideo = function () {
@@ -277,7 +312,12 @@ var elems = {
     canvas : document.getElementById('mainCanvas'),
     media : document.createElement('video'),
     playBtn : document.getElementById('playToggle'),
+    playBtnIcon : document.querySelector('#playToggle i'),
+    skipBackwardBtn : document.getElementById('skipBackward'),
+    skipForwardBtn : document.getElementById('skipForward'),
     muteBtn : document.getElementById('audioToggle'),
+    muteBtnIcon : document.querySelector('#audioToggle i'),
+    triggerVisBtn : document.getElementById('triggerVisToggle'),
     playBtnSmall : document.querySelector('#playToggleSmall i'),
     muteBtnSmall : document.querySelector('#audioToggleSmall i'),
     settingsBtn : document.getElementById('settingsToggle'),
@@ -346,12 +386,15 @@ elems.inputSelectMediaInputs.addEventListener('change', function (e) {
 
 
 // Event Listeners
-// elems.playBtn.addEventListener('click', togglePlayback);
-// elems.muteBtn.addEventListener('click', toggleMute);
+elems.playBtn.addEventListener('click', togglePlayback);
+elems.muteBtn.addEventListener('click', toggleMute);
+elems.skipBackwardBtn.addEventListener('click', skipBackward);
+elems.skipForwardBtn.addEventListener('click', skipForward);
 elems.playBtnSmall.addEventListener('click', togglePlayback);
 elems.muteBtnSmall.addEventListener('click', toggleMute);
 elems.settingsBtn.addEventListener('click', toggleSettings);
 elems.fullscreenBtn.addEventListener('click', function () { toggleFullscreen(document.body); } );
+elems.triggerVisBtn.addEventListener('click', toggleTriggerVis);
 
 elems.inputPulseLength.addEventListener('change', function (e) {
     PULSELENGTH = this.value;
@@ -363,5 +406,8 @@ elems.inputRefreshRate.addEventListener('change', function (e) {
 elems.inputThreshhold.addEventListener('change', function (e) {
     THRESHHOLD = this.value;
 });
+
+
+update_toggle_buttons();
 
 })();
