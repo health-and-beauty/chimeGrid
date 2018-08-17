@@ -4,12 +4,9 @@ This is a musical experiment using video and image media to generate dynamic
 and interactive audio output.
 
 
-Getting Started
+Installation
 -----------------------------------
-
-### Dependencies
-- https://nodejs.org/en/
-
+Setting up and launching ChimeGrid requires node & npm to be installed. (https://nodejs.org/en/)
 
 1. Navigate to the ChimeGrid folder in the terminal
 2. Run the command `npm install`
