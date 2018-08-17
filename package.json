@@ -27,5 +27,8 @@
   "dependencies": {
     "font-awesome": "^4.7.0",
     "webmidi": "^2.0.0"
+  },
+  "devDependencies": {
+    "http-server": "^0.11.1"
   }
 }
