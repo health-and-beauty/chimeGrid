@@ -6,7 +6,14 @@ and interactive audio output.
 
 Getting Started
 -----------------------------------
-_add contents here..._
+
+### Dependencies
+- https://nodejs.org/en/
+
+
+1. Navigate to the ChimeGrid folder in the terminal
+2. Run the command `npm install`
+3. Launch chimeGrid a web browser `http-server -o -c-1 -p 8082` 
 
 
 Notes
